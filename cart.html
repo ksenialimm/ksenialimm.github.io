@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link rel="stylesheet" href="./global.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair Display:wght@400;500;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poly:wght@400&display=swap"
+    />
+  </head>
+  <body>
+    <div class="desktop" id="second">
+        <img class="footerbg-icon" alt="" src="./assets/png/footerbg@2x.png" />
+
+      <img class="mainbg-icon" alt="" src="./assets/png/mainbg@2x.png" />
+
+      <div class="footerleft">
+        <div class="div">
+          <p class="p">Часы работы
+          <br>
+          <br>
+          Ждем вас в гости
+          <br>
+          Пн-пт
+          <br>
+          10:00-20:00
+          <br>
+          СБ-ВС
+          <br>
+          10:00-18:00
+        </p>
+        </div>
+      </div>
+      <div class="footertitle">
+        <div class="footertitle-child"></div>
+        <div class="div1">Контакты</div>
+      </div>
+      <div class="footerright" id="con">
+        <div class="creds">
+          <p class="p">+375(25)7412533</p>
+          <p class="p">г.Брест ул Машерова 17(2 этаж)</p>
+          <p class="p">stackofbooks@mail.ru</p>
+          <p class="p">Баран К. В. Элб-3</p>
+        </div>
+        <img class="socials-icon" alt="" src="./assets/svg/socials.svg" />
+        <img class="map-icon" alt="" src="./assets/png/map@2x.png" />
+      </div>
+      <div class="header">
+        <div class="logo">
+          <img class="logo-child" alt="" src="./assets/png/rectangle-141@2x.png" />
+
+          <div class="stackofbooksmailru1">stackofbooks@mail.ru</div>
+        </div>
+        <nav class="menu">
+        
+          <input id="menu-toggle" type="checkbox">
+          <label class="menu-btn" for="menu-toggle">
+            <span></span>
+          </label>
+  
+          <ul class="menu__box">
+            <li><a class="menu__item" href="index.html">Главная</a></li>
+            <li><a class="menu__item" href="index.html">О нас</a></li>
+            <li><a class="menu__item" href="#">Каталог</a></li>
+            <li><a class="menu__item" href="index.html" >Доставка</a></li>
+            <li><a class="menu__item" href="index.html">Контакты</a></li>
+          </ul>
+        </nav>
+        <div class="links">
+          <a href="index.html"><div class="div24">Главная</div></a>
+          <a href="index.html"><div class="div25">О нас</div></a>
+          <a href="#"><div class="div26">Каталог</div></a>
+          <a href="index.html"><div class="div27">Доставка</div></a>
+          <a href="index.html"><div class="div28">Контакты</div></a>
+        </div>
+      </div>
+      <div class="cart">
+        <h1>Корзина</h1>
+        <form>
+          <label for="products">Выберите товар:</label>
+          <select id="products">
+            <option value="">--Выберите товар--</option>
+            <option value="Джон Синсеро НИ СЫ" data-price="19">Джон Синсеро НИ СЫ</option>
+            <option value="Спаси меня Мона Кастен" data-price="21">Спаси меня Мона Кастен</option>
+            <option value="1984 Джордж Оруэлл" data-price="22">1984 Джордж Оруэлл</option>
+          </select>
+          <label for="quantity">Количество:</label>
+          <input type="number" id="quantity" min="1" max="10">
+          <button type="button" id="add-to-cart">Добавить в корзину</button>
+        </form>
+        <ul id="cart"></ul>
+        <p id="total"></p>
+        <button class="contactbtn" onclick="order()">
+            <div class="div12">Оформить Заказ</div>
+          </button> 
+      </div>
+      <script>
+        // Находим элементы HTML:
+        const productsSelect = document.getElementById('products');
+        const quantityInput = document.getElementById('quantity');
+        const addToCartButton = document.getElementById('add-to-cart');
+        const cartList = document.getElementById('cart');
+        const total = document.getElementById('total');
+
+        // Объявляем объект корзины:
+        const cart = {
+        items: [],
+        
+        // Метод для добавления товара в корзину:
+        addItem(item) {
+            this.items.push(item);
+        },
+        
+        // Метод для подсчета общей стоимости товаров в корзине:
+        getTotal() {
+            return this.items.reduce((total, item) => {
+            return total + (item.price * item.quantity);
+            }, 0);
+        },
+        
+        // Метод для отображения корзины:
+        render() {
+            cartList.innerHTML = '';
+            this.items.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.quantity} x ${item.product} - ${item.price * item.quantity} руб.`;
+            cartList.appendChild(li);
+            });
+            
+            total.textContent = `Общая стоимость: ${this.getTotal()} руб.`;
+        }
+        };
+
+        // Обработчик события клика на кнопку "Добавить в корзину":
+        addToCartButton.addEventListener('click', () => {
+        const product = productsSelect.value;
+        const quantity = quantityInput.value;
+        
+        if (product && quantity) {
+            const price = parseFloat(productsSelect.options[productsSelect.selectedIndex].getAttribute('data-price'));
+            
+            // Создаем объект товара и добавляем его в корзину:
+            const item = { product, quantity, price };
+            cart.addItem(item);
+            
+            // Отображаем корзину:
+            cart.render();
+            
+            // Очищаем поля выбора товара и ввода количества:
+            productsSelect.value = '';
+            quantityInput.value = '';
+        }
+        });
+
+        function order(){
+            var t = cart.getTotal();
+            if(t > 0){
+                alert('Ваш заказ на ' +  t + ' рублей успешено офрмлен');
+                location.reload();
+            } else{
+                alert('Выберите товары!');
+            }
+        }
+      </script>   
+    </div>
+    </body>
+</html>  
